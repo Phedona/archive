@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archiv nach Datum</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #archive {
+            margin: 20px;
+        }
+        .date-entry {
+            cursor: pointer;
+            margin: 5px 0;
+            color: blue;
+        }
+        .file-list {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Archiv</h1>
+    <div id="archive"></div>
+
+    <script>
+        const files = [
+            "2024-09-21_dokument1.pdf",
+            "2024-09-21_dokument2.docx",
+            "2024-09-22_bild.jpg",
+            "2024-09-23_notiz.txt"
+        ];
+
+        const archiveContainer = document.getElementById('archive');
+
+        // Datumsgruppen erstellen
+        const dates = files.reduce((acc, file) => {
+            const date = file.split('_')[0];  // Extrahiere das Datum aus dem Dateinamen
+            if (!acc[date]) acc[date] = [];
+            acc[date].push(file);
+            return acc;
+        }, {});
+
+        // Anzeige der Datumsübersicht
+        for (let date in dates) {
+            const dateEntry = document.createElement('div');
+            dateEntry.textContent = date;
+            dateEntry.classList.add('date-entry');
+            dateEntry.onclick = function() {
+                showFilesForDate(date);
+            };
+            archiveContainer.appendChild(dateEntry);
+        }
+
+        // Funktion zum Anzeigen der Dateien für ein bestimmtes Datum
+        function showFilesForDate(date) {
+            const fileList = dates[date];
+            const fileDiv = document.createElement('div');
+            fileDiv.classList.add('file-list');
+            fileDiv.innerHTML = `<h3>Dateien für ${date}:</h3><ul>${fileList.map(file => `<li>${file}</li>`).join('')}</ul>`;
+            
+            // Vorherige Einträge entfernen, falls vorhanden
+            const existingFileList = document.querySelector('.file-list');
+            if (existingFileList) existingFileList.remove();
+            
+            archiveContainer.appendChild(fileDiv);
+        }
+    </script>
+</body>
+</html>
